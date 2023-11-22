@@ -6,10 +6,8 @@ import co.com.user.api.dto.request.UserUpdateRequestDto;
 import co.com.user.api.dto.response.UserResponseDto;
 import co.com.user.api.mapper.UserDtoMapper;
 import co.com.user.usecase.UserUseCase;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,14 +32,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Validated
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Documentación de la API del microservicio usuarios",
-                version = "1.0",
-                description = "Esta API permite registrar nuevos usuarios en el sistema, " +
-                        "validando previamente si quien intenta hacer el registro cumple los requisitos."
-        )
-)
 public class UserController {
 
     private final UserUseCase userUseCase;
@@ -54,7 +44,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuario creado correctamente",
                     content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserRequestDto.class))),
+                    schema = @Schema(implementation = UserResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Solicitud incorrecta. Verifique los datos enviados.",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
@@ -75,23 +65,84 @@ public class UserController {
                 .map(UserDtoMapper::toResponse);
     }
 
+    @Operation(
+            summary = "Buscar al usuario por id",
+            operationId = "Buscar usuario"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta. Verifique los datos enviados.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor.",
+                    content = @Content)
+    })
     @GetMapping("/{idUser}")
-    public Mono<UserResponseDto> findById(@NotNull @PathVariable(name = "idUser") Long idUser) {
+    public Mono<UserResponseDto> findById(
+            @Parameter(name = "idUser",
+                    description = "Propiedad que identifica el registro de los dato del usuario",
+                    schema = @Schema(implementation = Long.class))
+            @NotNull @PathVariable(name = "idUser") Long idUser) {
         return userUseCase.findById(idUser)
                 .map(UserDtoMapper::toResponse);
     }
 
+    @Operation(
+            summary = "Actualizar datos del usuario"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actualizado correctamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta. Verifique los datos enviados.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor.",
+                    content = @Content)
+    })
     @PutMapping("/{idUser}")
     public Mono<UserResponseDto> updateUser(
+            @Parameter(name = "idUser",
+                    description = "Propiedad que identifica el registro de los dato del usuario",
+                    schema = @Schema(implementation = Long.class))
             @NotNull @PathVariable(name = "idUser") Long idUser,
+            @Parameter(name = "userUpdateRequestDto",
+                    description = "Objeto con la informacion del usuario, " +
+                            "donde los campos a ingresar son actualizados en la DB",
+                    schema = @Schema(implementation = UserUpdateRequestDto.class))
             @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         return userUseCase.update(UserDtoMapper.toModel(userUpdateRequestDto), idUser)
                 .map(UserDtoMapper::toResponse);
     }
 
+    @Operation(
+            summary = "Actualizar coordenadas del usuario"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Actualizado correctamente",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud incorrecta. Verifique los datos enviados.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor.",
+                    content = @Content)
+    })
     @PatchMapping("/{idUser}")
     public Mono<UserResponseDto> updateUserCoordinates(
+            @Parameter(name = "idUser",
+                    description = "Propiedad que identifica el registro de los dato del usuario",
+                    schema = @Schema(implementation = Long.class))
             @NotNull @PathVariable(name = "idUser") Long idUser,
+            @Parameter(name = "userCoordinatesRequestDto",
+                    description = "Objeto con las coordenadas del usuario, " +
+                            "donde los campos a ingresar son actualizados en la DB",
+                    schema = @Schema(implementation = UserCoordinatesRequestDto.class))
             @RequestBody UserCoordinatesRequestDto userCoordinatesRequestDto) {
         return userUseCase.updateUserCoordinates(
                 UserDtoMapper.userCoordinatesRequestDtoToModel(userCoordinatesRequestDto), idUser)

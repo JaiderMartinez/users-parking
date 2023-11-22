@@ -9,6 +9,7 @@ import co.com.user.usecase.ErrorDictionaryUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,10 +36,10 @@ public class ErrorController {
     public Mono<ResponseEntity<ResponseErrorDto>> genericHandleException(ErrorCode errorCode, Exception e) {
         return errorDictionaryUseCase.findById(errorCode.getCode())
                 .defaultIfEmpty(ErrorDictionary.builder()
-                        .httpStatus(400)
-                        .message("")
-                        .messageEn("")
-                        .messageEs("")
+                        .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .messageEs("Ha ocurrido un error en el sistema, por favor contacte al administrador")
+                        .messageEn("An error has occurred in the system, please contact the administrator")
+                        .id("B500-000")
                         .build())
                 .map(errorDictionary -> getErrorEntity(errorDictionary, e));
     }

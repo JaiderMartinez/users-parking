@@ -1,6 +1,4 @@
-ext {
-    openApiVersion = "1.6.9"
-}
+
 
 dependencies {
     implementation project(':model')
@@ -11,6 +9,5 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
-    implementation "org.springdoc:springdoc-openapi-webflux-ui:${openApiVersion}"
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
 }

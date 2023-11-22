@@ -11,17 +11,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfiguration {
 
+    private static final String TITLE_APP = "Documentacion de la API del microservicio usuarios";
+    private static final String TERMS_OF_SERVICE = "https://swagger.io/terms/";
+    private static final String NAME_LICENSE = "Apache 2.0";
+    private static final String LICENSE_URL = "https://springdoc.org";
+
     @Bean
     public OpenAPI customOpenApi(@Value("${app.description}") String appDescription,
                                  @Value("${app.version}") String appVersion){
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info()
-                        .title("Documentación de la API del microservicio usuarios")
+                        .title(TITLE_APP)
                         .version(appVersion)
                         .description(appDescription)
-                        .termsOfService("http://swagger.io/terms/")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .termsOfService(TERMS_OF_SERVICE)
+                        .license(new License().name(NAME_LICENSE).url(LICENSE_URL))
                 );
     }
 

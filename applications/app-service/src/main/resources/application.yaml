@@ -3,8 +3,6 @@ server:
 spring:
   application:
     name: "users"
-  devtools:
-    add-properties: false
   r2dbc:
     name: users
     username: root
@@ -28,5 +26,5 @@ management:
 cors:
   allowed-origins: "*"
 app:
-  description: "Manejo de registro u otras operaciones con los usuarios del parqueadero"
+  description: Manejo de registro u otras operaciones con los usuarios del parqueadero
   version: 1.0
