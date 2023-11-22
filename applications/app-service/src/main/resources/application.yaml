@@ -5,10 +5,15 @@ spring:
     name: "users"
   devtools:
     add-properties: false
-  h2:
-    console:
-      enabled: true
-      path: "/h2"
+  r2dbc:
+    name: users
+    username: root
+    password: 12345678
+    url: r2dbc:postgresql://parking.ciusywni3ifc.us-east-1.rds.amazonaws.com:5432/users?sslmode=require
+    #pool:
+      #initial-size: 12
+      #max-size: 15
+      #max-idle-time: 30
   profiles:
     include: null
 management:
@@ -21,4 +26,7 @@ management:
       probes:
         enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: "*"
+app:
+  description: "Manejo de registro u otras operaciones con los usuarios del parqueadero"
+  version: 1.0

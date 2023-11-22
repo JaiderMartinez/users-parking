@@ -1,7 +1,16 @@
+ext {
+    openApiVersion = "1.6.9"
+}
+
 dependencies {
-    implementation project(':usecase')
     implementation project(':model')
+    implementation project(':usecase')
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
+    implementation "org.springdoc:springdoc-openapi-webflux-ui:${openApiVersion}"
 }

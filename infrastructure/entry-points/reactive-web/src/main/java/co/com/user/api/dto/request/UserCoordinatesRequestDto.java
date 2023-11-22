@@ -1,5 +1,6 @@
 package co.com.user.api.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserCoordinatesRequestDto {
 
-    private String locationX;
-    private String locationY;
+    @NotNull
+    private Integer locationX;
+    @NotNull
+    private Integer locationY;
 }
