@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
     B400000("B400-000", "Bad Request"),
+    N401000("N401-000", "Unauthorized"),
     N000000("N00-000", "Not found");
 
     private final String code;
