@@ -1,10 +1,10 @@
 package co.com.user.config.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import co.com.user.model.user.config.ErrorCode;
+import co.com.user.model.user.config.ParkingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;
-import org.reactivecommons.utils.ObjectMapper;
-import org.reactivecommons.utils.ObjectMapperImp;
 
 import java.util.Base64;
 
@@ -12,10 +12,13 @@ import java.util.Base64;
 public class JwtProvider {
 
     public static User getPayload(String token) {
-        String payload =token.split("\\.")[1];
+        String payload = token.split("\\.")[1];
         byte[] decodedPayloadBytes = Base64.getDecoder().decode(payload);
         String decodedPayload = new String(decodedPayloadBytes);
-        ObjectMapper mapper = new ObjectMapperImp();
-        return mapper.map(decodedPayload, User.class);
+        try {
+            return new ObjectMapper().readValue(decodedPayload, User.class);
+        } catch (JsonProcessingException e) {
+            throw new ParkingException(ErrorCode.N401000);
+        }
     }
 }
