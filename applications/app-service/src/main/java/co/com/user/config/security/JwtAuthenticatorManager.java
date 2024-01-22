@@ -18,7 +18,7 @@ public class JwtAuthenticatorManager implements ReactiveAuthenticationManager {
     public Mono<Authentication> authenticate(Authentication authentication) {
         return Mono.just(authentication)
                 .map( auth -> {
-                    User userAuth = JwtProvider.getPayload(auth.getCredentials().toString());
+                    User userAuth = JwtProviderUtil.getPayload(auth.getCredentials().toString());
                     return (Authentication) new UsernamePasswordAuthenticationToken(
                             userAuth.getEmail(),
                             null,
@@ -30,7 +30,7 @@ public class JwtAuthenticatorManager implements ReactiveAuthenticationManager {
                 })
                 .onErrorResume(throwable -> {
                     log.error("Error al autenticar usuario: {}", throwable.getMessage());
-                    return Mono.error(new ParkingException(ErrorCode.N401000));
+                    return Mono.error(new ParkingException(ErrorCode.B401000));
                 });
     }
 }

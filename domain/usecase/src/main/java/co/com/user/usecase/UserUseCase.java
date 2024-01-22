@@ -19,12 +19,12 @@ public class UserUseCase {
 
     public Mono<User> findById(Long idUser) {
         return userGateway.findById(idUser)
-                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.N000000)));
+                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.B404000)));
     }
 
     public Mono<User> update(User user, Long idUser) {
         return userGateway.findById(idUser)
-                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.N000000)))
+                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.B404000)))
                 .flatMap( userFound ->
                     userGateway.save(replaceValues(user, userFound))
                 );
@@ -45,7 +45,7 @@ public class UserUseCase {
 
     public Mono<User> updateUserCoordinates(User user, Long idUser) {
         return userGateway.findById(idUser)
-                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.N000000)))
+                .switchIfEmpty(Mono.error(new ParkingException(ErrorCode.B404000)))
                 .flatMap( userFound -> {
                     userFound.setLocationX(user.getLocationX());
                     userFound.setLocationY(user.getLocationY());

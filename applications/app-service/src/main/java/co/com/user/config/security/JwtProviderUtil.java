@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 import java.util.Base64;
 
 @UtilityClass
-public class JwtProvider {
+public class JwtProviderUtil {
 
     public static User getPayload(String token) {
         String payload = token.split("\\.")[1];
@@ -18,7 +18,7 @@ public class JwtProvider {
         try {
             return new ObjectMapper().readValue(decodedPayload, User.class);
         } catch (JsonProcessingException e) {
-            throw new ParkingException(ErrorCode.N401000);
+            throw new ParkingException(ErrorCode.B401000);
         }
     }
 }

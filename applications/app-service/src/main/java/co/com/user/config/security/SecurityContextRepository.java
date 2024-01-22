@@ -22,7 +22,7 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        String token = exchange.getAttribute("token");
+        final String token = exchange.getAttribute("token");
         return jwtAuthenticatorManager.authenticate(new UsernamePasswordAuthenticationToken(token, token))
                 .map(SecurityContextImpl::new);
     }
