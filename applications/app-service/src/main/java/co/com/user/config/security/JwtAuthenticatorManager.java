@@ -2,6 +2,7 @@ package co.com.user.config.security;
 
 import co.com.user.model.user.config.ErrorCode;
 import co.com.user.model.user.config.ParkingException;
+import co.com.user.utils.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +21,16 @@ public class JwtAuthenticatorManager implements ReactiveAuthenticationManager {
                 .map( auth -> {
                     User userAuth = JwtProviderUtil.getPayload(auth.getCredentials().toString());
                     return (Authentication) new UsernamePasswordAuthenticationToken(
-                            userAuth.getEmail(),
-                            null,
+                            userAuth,
+                            auth.getCredentials(),
                             userAuth.getGroups()
-                            .stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .toList()
+                                .stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .toList()
                     );
                 })
                 .onErrorResume(throwable -> {
-                    log.error("Error al autenticar usuario: {}", throwable.getMessage());
+                    log.error(Constant.LOG_ERROR_AUTHENTICATE_USER, throwable.getMessage());
                     return Mono.error(new ParkingException(ErrorCode.B401000));
                 });
     }

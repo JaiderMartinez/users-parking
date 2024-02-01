@@ -1,5 +1,6 @@
 package co.com.user.config.security;
 
+import co.com.user.utils.Constant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,7 +23,7 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        final String token = exchange.getAttribute("token");
+        final String token = exchange.getAttribute(Constant.KEY_TOKEN);
         return jwtAuthenticatorManager.authenticate(new UsernamePasswordAuthenticationToken(token, token))
                 .map(SecurityContextImpl::new);
     }

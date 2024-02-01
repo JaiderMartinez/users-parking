@@ -19,7 +19,8 @@ public class WebSecurityConfiguration {
     private final SecurityContextRepository securityContextRepository;
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, JwtFilter jwtFilter) {
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
+                                                            JwtFilter jwtFilter) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges

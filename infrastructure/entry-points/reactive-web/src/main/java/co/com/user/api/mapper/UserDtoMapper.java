@@ -39,8 +39,8 @@ public class UserDtoMapper {
 
     public static User userCoordinatesRequestDtoToModel(UserCoordinatesRequestDto userCoordinatesRequestDto) {
         return User.builder()
-                .locationX(userCoordinatesRequestDto.getLocationX())
-                .locationY(userCoordinatesRequestDto.getLocationY())
+                .locationX(userCoordinatesRequestDto.locationX())
+                .locationY(userCoordinatesRequestDto.locationY())
                 .build();
     }
 
