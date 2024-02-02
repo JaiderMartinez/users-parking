@@ -1,6 +1,8 @@
 package co.com.user.api.mapper;
 
+import co.com.user.api.dto.request.UserCoordinatesRequestDto;
 import co.com.user.api.dto.request.UserRequestDto;
+import co.com.user.api.dto.request.UserUpdateRequestDto;
 import co.com.user.api.dto.response.UserResponseDto;
 import co.com.user.model.user.User;
 import lombok.experimental.UtilityClass;
@@ -32,6 +34,26 @@ public class UserDtoMapper {
                 .password(user.getPassword())
                 .locationX(user.getLocationX())
                 .locationY(user.getLocationY())
+                .build();
+    }
+
+    public static User userCoordinatesRequestDtoToModel(UserCoordinatesRequestDto userCoordinatesRequestDto) {
+        return User.builder()
+                .locationX(userCoordinatesRequestDto.locationX())
+                .locationY(userCoordinatesRequestDto.locationY())
+                .build();
+    }
+
+    public static User toModel(UserUpdateRequestDto userUpdateRequestDto) {
+        return User.builder()
+                .firstName(userUpdateRequestDto.getFirstName())
+                .lastName(userUpdateRequestDto.getLastName())
+                .document(userUpdateRequestDto.getDocument())
+                .email(userUpdateRequestDto.getEmail())
+                .phone(userUpdateRequestDto.getPhone())
+                .password(userUpdateRequestDto.getPassword())
+                .locationX(userUpdateRequestDto.getLocationX())
+                .locationY(userUpdateRequestDto.getLocationY())
                 .build();
     }
 }

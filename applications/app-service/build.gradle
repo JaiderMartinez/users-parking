@@ -7,9 +7,12 @@ dependencies {
     implementation project(':model')
     implementation project(':usecase')
     implementation 'org.springframework.boot:spring-boot-starter'
-    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.0'
+
     testImplementation 'com.tngtech.archunit:archunit:1.1.0'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.register('explodedJar', Copy) {

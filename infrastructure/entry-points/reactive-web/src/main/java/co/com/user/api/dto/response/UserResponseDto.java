@@ -1,10 +1,14 @@
 package co.com.user.api.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponseDto {
 
     private Long id;
@@ -14,6 +18,6 @@ public class UserResponseDto {
     private String email;
     private String phone;
     private String password;
-    private String locationX;
-    private String locationY;
+    private Integer locationX;
+    private Integer locationY;
 }
