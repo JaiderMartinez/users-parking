@@ -72,6 +72,7 @@ public class ErrorController implements ErrorWebExceptionHandler {
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        exchange.getResponse().getHeaders().set(Constant.KEY_HEADER_MESSAGE, ex.getMessage());
         if (ex instanceof ParkingException parkingEx) {
             return genericHandleException(parkingEx.getError(), parkingEx)
                     .flatMap(errorResponse -> {
@@ -90,6 +91,12 @@ public class ErrorController implements ErrorWebExceptionHandler {
                 );
     }
 
+    /**
+     * bufferSize: 4096 bytes (4 KB) es un valor de buffer estándar en muchas
+     * aplicaciones y bibliotecas.
+     * buffer: es un espacio de memoria temporal que se utiliza para almacenar
+     * datos durante un proceso de transferencia o procesamiento.
+     */
     private Flux<DataBuffer> get(ResponseErrorDto responseErrorDto, ServerWebExchange exchange) {
         return DataBufferUtils.read(
                 new ByteArrayResource(getBody(responseErrorDto)),
