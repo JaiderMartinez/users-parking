@@ -13,10 +13,10 @@ ENV PROFILE=${VAR_PROFILE}
 WORKDIR /app
 
 # Copiar archivos y directorios.
-COPY ./applications/app-service/build/libs/users.jar users.jar
+COPY ./applications/app-service/build/libs/users.jar /app/users.jar
 
 # Describe en qué puertos escucha tu aplicación.
 EXPOSE 8081
 
 # Especifique el ejecutable predeterminado.
-ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "users.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar", "/app/users.jar"]
