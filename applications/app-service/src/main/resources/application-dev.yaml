@@ -1,0 +1,29 @@
+spring:
+  r2dbc:
+    name: ${DATABASE_NAME:users}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:jaider18}
+    url: ${DATABASE_URL:r2dbc:postgresql://parking.ciusywni3ifc.us-east-1.rds.amazonaws.com:5432/users?sslmode=require}
+      #pool:
+      #initial-size: 12
+    #max-size: 15
+    #max-idle-time: 30
+
+# se utiliza para controlar qué endpoints de gestión están disponibles a través de la interfaz HTTP
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_EXPOSURE_ENDPOINTS:"health,prometheus"}
+
+# proporciona información sobre el estado de la aplicación
+  endpoint:
+    health:
+      probes:
+        enabled: ${ENDPOINT_HEALTH_ENABLE:true}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:"*"}
+app:
+  description: ${APP_DESCRIPTION:Manejo de registro u otras operaciones con los usuarios del parqueadero}
+  version: ${APP_VERSION:1.0}
