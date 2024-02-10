@@ -47,5 +47,5 @@ steps:
       command: 'buildAndPush'
       Dockerfile: 'deployment/Dockerfile'
       buildContext: 'deployment'
-      tags: 'users:${{ variables.version_image }}'
+      tags: '${{ variables.version_image }}'
       arguments: '--build-arg VAR_PROFILE=${{ variables.var_profile }}'
