@@ -19,6 +19,13 @@ variables:
       value: latest
     ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
       value: 1.0-SNATSHOP
+  - name: var_profile
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: prod
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: dev
 
 steps:
   - task: Gradle@2
@@ -40,4 +47,5 @@ steps:
       command: 'buildAndPush'
       Dockerfile: 'deployment/Dockerfile'
       buildContext: 'deployment'
-      tags: 'users:$(variables.version_image)'
+      tags: 'users:${{ variables.version_image }}'
+      arguments: '--build-arg VAR_PROFILE=${{ variables.var_profile }}'
