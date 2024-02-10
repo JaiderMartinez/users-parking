@@ -12,15 +12,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  VERSION_IMAGE:
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
-    value: 1.0-SNASHOP
-  ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
-    value: latest
-  ${{ else }} :
-    value: 1.0-SNASHOP
-  DOCKER_USERNAME: ${{ variables['DOCKER_USERNAME'] }}  # Reference Azure DevOps variable
-  DOCKER_PASSWORD: ${{ variables['DOCKER_PASSWORD'] }}
+  - name: version_image
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: latest
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: 1.0-SNATSHOP
 
 steps:
   - task: Gradle@2
@@ -37,14 +35,9 @@ steps:
 
   - task: Docker@2
     inputs:
-      command: 'build'
-      Dockerfile: 'deployment/Dockerfile'
-      tags: $(VERSION_IMAGE)
-
-  - task: Docker@2
-    inputs:
-      command: 'push'
-      tags: '$(VERSION_IMAGE)'
       repository: 'jaider18/users-parking'
-      username: $(DOCKER_USERNAME)
-      password: $(DOCKER_PASSWORD)
+      containerRegistry: 'docker_auth'
+      command: 'buildAndPush'
+      Dockerfile: 'deployment/Dockerfile'
+      buildContext: 'deployment'
+      tags: 'users:$(variables.version_image)'
