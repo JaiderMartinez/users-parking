@@ -16,16 +16,16 @@ variables:
     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
       value: 1.0-SNATSHOP
     ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
-      value: latest
-    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
       value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: latest
   - name: var_profile
     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
       value: dev
     ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
-      value: prod
-    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
       value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: prod
 
 steps:
   - task: Gradle@2
@@ -42,9 +42,9 @@ steps:
 
   - task: Docker@2
     inputs:
+      command: 'buildAndPush'
       repository: 'jaider18/users-parking'
       containerRegistry: 'docker_auth'
-      command: 'buildAndPush'
       Dockerfile: 'deployment/Dockerfile'
       buildContext: 'deployment'
       tags: '${{ variables.version_image }}'
