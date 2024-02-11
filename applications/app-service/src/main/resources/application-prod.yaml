@@ -1,0 +1,22 @@
+spring:
+  r2dbc:
+    name: ${DATABASE_NAME:users}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:jaider18}
+    url: ${DATABASE_URL:r2dbc:postgresql://parking.ciusywni3ifc.us-east-1.rds.amazonaws.com:5432/users?sslmode=require}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: ${ENDPOINT_HEALTH_ENABLE:true}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:"*"}
+app:
+  description: ${APP_DESCRIPTION:Manejo de registro u otras operaciones con los usuarios del parqueadero}
+  version: ${APP_VERSION:1.0}
