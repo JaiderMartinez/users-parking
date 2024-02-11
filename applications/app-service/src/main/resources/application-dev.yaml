@@ -14,7 +14,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: ${MANAGEMENT_EXPOSURE_ENDPOINTS:"health,prometheus"}
+        include: "health,prometheus"
 
 # proporciona información sobre el estado de la aplicación
   endpoint:
