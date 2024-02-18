@@ -17,7 +17,7 @@ ENV JAVA_OPTS=" -Dspring.profiles.active=${PROFILE} -Duser.timezone=America/Bogo
 WORKDIR /app
 
 # Copiar archivos y directorios.
-COPY **/app-service/build/libs/*.jar /app/users.jar
+COPY ./applications/app-service/build/libs/*.jar /app/users.jar
 
 # Especifique el ejecutable predeterminado.
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS  -jar /app/users.jar" ]
