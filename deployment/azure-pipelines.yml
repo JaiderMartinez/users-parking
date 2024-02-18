@@ -1,0 +1,74 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+  - develop
+  - master
+  - feature/pipeline
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: version_image
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: 1.0-SNATSHOP
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: latest
+  - name: var_profile
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }} :
+      value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/feature/pipeline') }} :
+      value: dev
+    ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/master') }} :
+      value: prod
+
+steps:
+  - checkout: self
+    fetchDepth: 0
+
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'sonarcloud_auth'
+      organization: 'bootcampv4devops'
+      scannerMode: 'Other'
+      extraProperties: |
+        # Additional properties that will be passed to the scanner,
+        # Put one key=value per line, example:
+        sonar.projectKey=bootcampV4DevOps_Personal-projects
+        sonar.projectName=Personal projects
+        sonar.modules=applications/app-service,infrastructure/entry-points/controllers,domain/model,infrastructure/driven-adapters/r2dbc-postgresql,domain/usecase
+        sonar.sources=src,deployment,settings.gradle,main.gradle,build.gradle,applications/app-service/build.gradle,infrastructure/entry-points/controllers/build.gradle,domain/model/build.gradle,infrastructure/driven-adapters/r2dbc-postgresql/build.gradle,domain/usecase/build.gradle
+        sonar.exclusions=**/MainApplication.java
+        sonar.junit.reportsPath=**/TEST-*.xml
+        sonar.test=src/test
+
+  - task: Gradle@2
+    inputs:
+      workingDirectory: ''
+      gradleWrapperFile: 'gradlew'
+      gradleOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.17'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      tasks: 'build sonar'
+
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '360'
+
+  - task: Docker@2
+    inputs:
+      command: 'buildAndPush'
+      repository: 'jaider18/users-parking'
+      containerRegistry: 'docker_auth'
+      Dockerfile: 'deployment/Dockerfile'
+      buildContext: './'
+      tags: '${{ variables.version_image }}'
+      arguments: '--build-arg VAR_PROFILE=${{ variables.var_profile }}'
